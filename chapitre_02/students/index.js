@@ -8,7 +8,39 @@ app.use((req, res, next) => {
 	next();
 });
 
+const students = [
+	{
+		id: 1,
+		name: "Nicolas",
+	},
+	{
+		id: 2,
+		name: "Anita",
+	},
+	{
+		id: 3,
+		name: "Djibril",
+	},
+];
+
+app.get("/", (req, res) =>{
+    res.send(students);
+})
+
+app.get("/students", (req, res) =>{
+    res.send(students);
+})
+
+app.post("/students", (req,res) => {
+    students.push({
+        id: students.length + 1,
+        name: req.body.name,
+    });
+    res.send(students)
+})
+
+
 
 app.listen(8000, () =>{
-    log("Listening")
+    console.log("Listening");
 })
