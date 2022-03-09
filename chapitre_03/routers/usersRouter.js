@@ -2,6 +2,14 @@ const express = require("express");
 const router = express.Router();
 const Joi = require("Joi");
 
+const schema = Joi.object({
+	username: Joi.string().min(4).required(),
+	age: Joi.number().min(10).required(),
+    email: Joi.string()
+        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+    ville: Joi.string().required(),
+});
+
 const users = [
     {
         username:"Djibril",
@@ -29,7 +37,14 @@ router.get("/",(req,res) => {
 })
 
 router.post("/",(req,res) =>{
-    users.push(req.body),
+    const user = req.body;
+    const validationResult = schema.validate(user);
+    if (validationResult.error) {
+		return res.status(400).json({
+			message: validationResult.error,
+		});
+	}
+    users.push(user),
     res.send(users)
 })
 
