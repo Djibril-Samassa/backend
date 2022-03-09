@@ -14,20 +14,23 @@ const users = [
     {
         username:"Djibril",
         email:"dsamassa.pro@gmail.com",
-        age:20,
         ville:"Paris",
+        age:20,
+        id:1,
     },
     {
         username:"Arthur",
         email:"a.melo@yahoo.com",
         age:29,
         ville:"Rio de Janeiro",
+        id:2,
     },
     {
         username:"Eden",
         email:"e.hazard@gmail.com",
         age:28,
         ville:"Bruxelles",
+        id:3,
     },
 ]
 
@@ -55,6 +58,18 @@ router.get("/:username",(req,res) =>{
     res.send(user);
 })
 
+router.get("/id/:id", (req,res) =>{
+    const userInfo = users.find((user) =>{
+        return user.id.toString() === req.params.id
+    })
+    res.send(userInfo)
+})
 
+router.get("/email/:email", (req,res) =>{
+    const userInfo = users.find((user) =>{
+        return user.email === req.params.email
+    })
+    res.send(userInfo)
+})
 
 module.exports = router;
