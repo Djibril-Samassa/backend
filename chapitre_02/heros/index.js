@@ -8,6 +8,7 @@ app.use(function debug (req, res, next,) {
     next();
 })
 
+
 const superHeroes = [
     {
         name: "Iron Man",
@@ -35,6 +36,27 @@ const superHeroes = [
     }
 ]
 
+function findHero(req, _res, next) {
+	const hero = superHeros.find((hero) => {
+		// Iron Man -> iron man -> iron-man
+		return (
+			req.params.name.toLowerCase().replace(" ", "-") ===
+			hero.name.toLowerCase().replace(" ", "-")
+		);
+	});
+
+	req.hero = hero;
+	next();
+}
+
+app.use(function transformName(req, _res, next) {
+    if (req.body.name) {
+        req.body.name = req.body.name.toLowerCase();
+    }
+    next();
+})
+
+
 app.get("/", (req, res) => {
     res.send(superHeroes)
 })
@@ -57,7 +79,21 @@ app.post("/heroes", (req, res) => {
     superHeroes.push({
         name: req.body.name
     })
-    res.send(superHeroes)
+    res.status(201).json({
+		message: "Ok, héro ajouté",
+        superHeroes
+	});
 })
+
+app.patch("/heroes/:name/powers", findHero, (req, res) => {
+	const hero = req.hero;
+
+	hero.power.push(req.body.power);
+
+	res.json({
+		message: "Power added",
+		hero,
+	});
+});
 
 app.listen(8000, () => console.log("Listening..."))
