@@ -1,7 +1,12 @@
 const express = require("express");
 const app = express();
-
+const dotenv = require("dotenv");
+dotenv.config({
+	path: "../config.env",
+});
+const { Pool } = require("pg")
 app.use(express.json());
+const Postgres = new Pool({ ssl: { rejectUnauthorized: false } });
 
 app.use((req, res, next) => {
 	console.log("requête reçue");
